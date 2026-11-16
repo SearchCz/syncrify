@@ -1,0 +1,92 @@
+
+<Devices>
+    <Device type="relay" id="syncrifyBond">
+        <Name>Bond</Name>
+
+        <ConfigUI>
+
+            <Field id="keypadId" type="menu">
+                <Label>KeypadLinc</Label>
+                <List class="self" filter="stuff" method="keypadList"/>
+            </Field>
+
+            <Field id="keypadButton" type="menu">
+                <Label>Keypad Button</Label>
+                <List>
+                    <Option value="1">1</Option>
+                    <Option value="2">2</Option>
+                    <Option value="3">3</Option>
+                    <Option value="4">4</Option>
+                    <Option value="5">5</Option>
+                    <Option value="6">6</Option>
+                    <Option value="7">7</Option>
+                    <Option value="8">8</Option>
+                </List>
+            </Field>
+
+            <Field id="boundDeviceId" type="menu">
+                <Label>Bound Device</Label>
+                <List class="self" filter="stuff" method="deviceList"/>
+            </Field>
+
+            <Field id="active" type="checkbox"
+            defaultValue="true">
+                <Label>Active</Label>
+            </Field>
+
+            <Field id="debug" type="checkbox"
+            defaultValue="false">
+                <Label>Enable Debug Logging</Label>
+            </Field>
+
+            <Field id="sep1" type="separator" >
+            </Field>
+
+            <Field id="auditOnSave" type="checkbox">
+                <Label>Audit automation conflicts whenever this Bond is saved</Label>
+                <DefaultValue>false</DefaultValue>
+            </Field>
+
+        </ConfigUI>
+
+        <States>
+
+            <State id="insteonAddress">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Insteon Address</TriggerLabel>
+                <ControlPageLabel>Insteon Address</ControlPageLabel>
+            </State>
+
+            <State id="lastInstruction">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Last Instruction</TriggerLabel>
+                <ControlPageLabel>Last Instruction</ControlPageLabel>
+            </State>
+
+            <State id="lastInstructionSourceType">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Last Instruction Source Type</TriggerLabel>
+                <ControlPageLabel>Last Instruction Source Type</ControlPageLabel>
+            </State>
+
+            <State id="lastInstructionSourceName">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Last Instruction Source Name</TriggerLabel>
+                <ControlPageLabel>Last Instruction Source Name</ControlPageLabel>
+            </State>
+
+            <State id="lastInstructionEpoch">
+                <ValueType>Integer</ValueType>
+                <TriggerLabel>Last Instruction Epoch</TriggerLabel>
+                <ControlPageLabel>Last Instruction Epoch</ControlPageLabel>
+            </State>
+
+            <State id="lastInstructionDatetime">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Last Instruction Datetime</TriggerLabel>
+                <ControlPageLabel>Last Instruction Datetime</ControlPageLabel>
+            </State>
+
+        </States>
+    </Device>
+</Devices>

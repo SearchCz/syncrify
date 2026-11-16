@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<MenuItems>
+    <MenuItem id="dumpObligations">
+        <Name>Dump Obligations</Name>
+        <CallbackMethod>dumpObligations</CallbackMethod>
+    </MenuItem>
+    <MenuItem id="dumpKeypadMappings">
+        <Name>Dump Keypad Mappings</Name>
+        <CallbackMethod>dumpKeypadMappings</CallbackMethod>
+    </MenuItem>
+    <MenuItem id="dumpBoundDeviceMappings">
+        <Name>Dump Bound Device Mappings</Name>
+        <CallbackMethod>dumpBoundDeviceMappings</CallbackMethod>
+    </MenuItem>
+    <MenuItem id="updateBondDescriptions">
+        <Name>Update Bond Descriptions</Name>
+        <CallbackMethod>updateBondDescriptions</CallbackMethod>
+    </MenuItem>
+
+</MenuItems>
