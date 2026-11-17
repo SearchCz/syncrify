@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/GettingStarted.md",
+                "file": "docs/BondConfiguration.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "GettingStarted"
+              "title": "BondConfiguration"
             }
           }
         ]
@@ -190,8 +190,9 @@
   },
   "active": "aa400254114ad2ca",
   "lastOpenFiles": [
-    "docs/BondConfiguration.md",
     "docs/GettingStarted.md",
+    "docs/Other.md",
+    "docs/BondConfiguration.md",
     "README.md",
     "docs/images/PluginConfig.png",
     "docs/images/BondConfig.png",
@@ -201,7 +202,6 @@
     "BondConfig.png",
     "PluginConfig 1.png",
     "PluginConfig.png",
-    "docs/Other.md",
     "Syncrify_Banner.png",
     "docs/images/Syncrify_Banner.png",
     "README 1.md",
