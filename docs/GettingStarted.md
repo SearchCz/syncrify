@@ -12,7 +12,7 @@ Once you've enabled Automatic Bond Creation, Syncrify will use those names as th
 
 ## Configure Syncrify
 
-After installing and enabling the plugin, you should see the Syncrify plugin configuration window.
+After installing and enabling the plugin, you should see the Syncrify plugin configuration window. 
 ![](docs/images/PluginConfig.png)
 The configuration window is divided into three sections: General, Automatic Bond Creation, and ReSync.
 

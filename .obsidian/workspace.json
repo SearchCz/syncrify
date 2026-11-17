@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/BondConfiguration.md",
+                "file": "docs/GettingStarted.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "BondConfiguration"
+              "title": "GettingStarted"
             }
           }
         ]
@@ -190,9 +190,9 @@
   },
   "active": "aa400254114ad2ca",
   "lastOpenFiles": [
+    "docs/BondConfiguration.md",
     "docs/GettingStarted.md",
     "README.md",
-    "docs/BondConfiguration.md",
     "docs/images/PluginConfig.png",
     "docs/images/BondConfig.png",
     "docs/images/kepadExample.png",
