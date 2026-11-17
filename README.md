@@ -11,8 +11,6 @@ Syncrify gives you the ability to use your Insteon KeypadLinc accessory buttons 
 
 A button can control a light, a plug, a Roomify Room, or just about any other Indigo on/off device. No chains of triggers to build, debug, or maintain.
 
-`[Getting Started](docs/GettingStarted.md)`
-
 ## Three participants. One synchronized relationship.
 
 **KeypadLinc Button**
