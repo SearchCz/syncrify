@@ -4,7 +4,7 @@
 
 **No triggers needed.**
 
-![[Syncrify_Banner.png]]
+![[docs/images/Syncrify_Banner.png]]
 
 
 Syncrify gives you the ability to use your Insteon KeypadLinc accessory buttons just like any other first-class Indigo device — and makes it remarkably simple to put those buttons in control of the devices you choose.
