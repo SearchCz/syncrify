@@ -1,7 +1,7 @@
-# Bond Configuration
+![](docs/images/kepadExample.png)# Bond Configuration
 
 Each Syncrify Bond represents the relationship between one physical KeypadLinc accessory button and the Indigo device you want it to control.
-![[docs/images/BondConfig.png]]
+![](BondConfig.png)
 Configuring a Bond is straightforward. There are just a few things to understand about the choices available.
 
 ## KeypadLinc
@@ -74,5 +74,4 @@ Once you've assigned a Bound Device to your Bonds, you can use the **plugin men
 Syncrify fills in the descriptions to make each Bond's relationship to its KeypadLinc button and controlled device easier to recognize throughout Indigo. Only Sybcrify Bonds that have no description will be included. 
 
 This is especially useful when you've created a large number of Bonds using AutoBond, and makes each button's purpose clear in Indigo. Here's an example from my setup:
-
-![[docs/images/kepadExample.png]]
+![](docs/images/kepadExample.png)
