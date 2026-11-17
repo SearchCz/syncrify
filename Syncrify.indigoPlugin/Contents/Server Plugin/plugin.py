@@ -35,9 +35,16 @@ class Plugin(indigo.PluginBase):
         indigo.devices.subscribeToChanges()
         indigo.insteon.subscribeToIncoming()
         self.obligations = {}
-        self.mapBoundDevices()
+#        self.mapBoundDevices()
         self.mapKeypadButtons()
-        self.createBonds()
+        autoBondEnabled = self.pluginPrefs.get("autoBondEnabled", True)
+
+        if autoBondEnabled:
+            folderName = self.pluginPrefs.get("deviceFolder", "Syncrify")
+            self.createBonds(folderName)
+        else:
+            self.mapKeypadButtons()
+
         self.initBonds()
 
     def mapBoundDevices(self):
@@ -155,9 +162,6 @@ class Plugin(indigo.PluginBase):
         if dev.deviceTypeId == "syncrifyBond":
             self.updateInsteonAddress(dev)
 
-    ########################################
-    def validateDeviceConfigUi(self, values_dict, type_id, dev_id):
-        return (True, values_dict)
 
     ########################################
     # Relay / Dimmer Action callback
@@ -545,7 +549,9 @@ class Plugin(indigo.PluginBase):
                          )
                     continue
 
+                
                 else:
+                    continue
 
                     # Retrieve the Bond for this keypad button
 
@@ -716,7 +722,6 @@ class Plugin(indigo.PluginBase):
         self.spawn(newDev, initiator, state)
 
     def insteonCommandReceived(self, cmd):
-        return
         key = (cmd.address.upper(), int(cmd.cmdScene))
 
         bondId = self.bondByKeypadButton.get(key)
@@ -843,14 +848,10 @@ class Plugin(indigo.PluginBase):
         return False
 
 
-    def createBonds(self):
+    def createBonds(self, folderName):
 
-        autoBondEnabled = self.pluginPrefs.get("autoBondEnabled", True)
-
-        if not autoBondEnabled:
-            return
-
-        folderName = self.pluginPrefs.get("deviceFolder", "Syncrify")
+        self.mapKeypadButtons()
+        reMap = False
 
         folderId = indigo.devices.folders.getId(folderName)
 
@@ -887,6 +888,7 @@ class Plugin(indigo.PluginBase):
                     if key in self.bondByKeypadButton:
                         continue
 
+                    reMap = True
                     bondName = f"{keypadName} [B{button}]"
 
                     props = {
@@ -909,7 +911,8 @@ class Plugin(indigo.PluginBase):
                     self.logger.info(
                         f"Created new Bond: {newBond.name} [{newBond.id}]"
                     )
-        self.mapKeypadButtons()
+        if reMap:
+            self.mapKeypadButtons()
 
     def initBonds(self):
 
@@ -1221,10 +1224,12 @@ class Plugin(indigo.PluginBase):
         button = int(bond.pluginProps.get("keypadButton", 0))
         boundDeviceId = int(bond.pluginProps.get("boundDeviceId", 0) or 0)
 
+        maxRetries, retryDelay = self.getRetrySettings()
+
         # Keypad obligation
         if initiator != "key":
             self.createObligation(
-                keypadId, button, state, 4
+                keypadId, button, state, maxRetries+1, retryDelay
             )
 
             self.executeObligation(keypadId, button)
@@ -1232,12 +1237,12 @@ class Plugin(indigo.PluginBase):
         # Bound-device obligation
         if initiator != "boundDevice" and boundDeviceId:
             self.createObligation(
-                boundDeviceId, 0, state, 4
+                boundDeviceId, 0, state, maxRetries+1, retryDelay
             )
 
             self.executeObligation(boundDeviceId, 0)
 
-    def createObligation(self, deviceId, button, state, tries):
+    def createObligation(self, deviceId, button, state, tries, delay):
 
         key = (deviceId, button)
 
@@ -1245,8 +1250,11 @@ class Plugin(indigo.PluginBase):
             "deviceId": deviceId,
             "button": button,
             "state": state,
-            "tries": tries
+            "tries": tries,
+            "delay": delay,
+            "due": 0
         }
+
 
     def executeObligation(self, deviceId, button):
 
@@ -1278,17 +1286,24 @@ class Plugin(indigo.PluginBase):
                 indigo.device.turnOff(deviceId)
 
         obligation["tries"] -= 1
+        obligation["due"] = time.time() + obligation["delay"]
+        delay = obligation["delay"]
 
         if self.isDebugActive():
+
             self.logger.info(
                 f"Executed obligation for device {deviceId}, "
                 f"button {button}: {'ON' if state else 'OFF'}, "
-                f"attempts remaining={obligation['tries']}"
+                f"attempts remaining={obligation['tries']}, "
+                f"next retry in {delay} seconds @={datetime.fromtimestamp(obligation['due']).strftime('%H:%M:%S')}"
             )
+
 
     def runConcurrentThread(self):
 
         while not self.stopThread:
+
+
             try:
                 if self.isDebugActive():
                     self.dumpObligations()
@@ -1300,18 +1315,32 @@ class Plugin(indigo.PluginBase):
 
     def executeObligations(self):
 
+        if not self.pluginPrefs.get("reSyncEnabled", True):
+            return
+
+        now = time.time()
+
         for deviceId, button in list(self.obligations.keys()):
+
             obligation = self.obligations.get((deviceId, button))
 
-            if obligation is None:
+            if not obligation:
                 continue
 
-            if obligation["tries"] > 0:
+            if obligation["tries"] <= 0:
+                continue
+
+            if now >= obligation["due"]:
                 self.executeObligation(deviceId, button)
 
     def dumpObligations(self):
 
-        self.logger.info("========== SYNCRIFY OBLIGATIONS ==========")
+        now = time.time()
+        nowFormatted = datetime.fromtimestamp(now).strftime("%Y-%m-%d %H:%M:%S")
+
+        self.logger.info(
+            f"========== SYNCRIFY OBLIGATIONS | NOW: {nowFormatted} =========="
+        )
 
         if not self.obligations:
             self.logger.info("No outstanding obligations.")
@@ -1323,14 +1352,25 @@ class Plugin(indigo.PluginBase):
             button = obligation["button"]
             state = obligation["state"]
             tries = obligation["tries"]
+            due = obligation.get("due", 0)
 
             deviceName = indigo.devices[deviceId].name
 
+            dueFormatted = (
+                datetime.fromtimestamp(due).strftime("%Y-%m-%d %H:%M:%S")
+                if due else "Not scheduled"
+            )
+
+            executable = tries > 0 and now >= due
+            executionStatus = "YES" if executable else "NO"
+
             self.logger.info(
                 f"Device: {deviceName} [{deviceId}] | "
-                f"Button: {button if button is not None else 'N/A'} | "
+                f"Button: {button if button else 'N/A'} | "
                 f"Desired: {'ON' if state else 'OFF'} | "
-                f"Attempts remaining: {tries}"
+                f"Attempts remaining: {tries} | "
+                f"Due: {dueFormatted} | "
+                f"Executable: {executionStatus}"
             )
 
         self.logger.info("========== END OBLIGATIONS ==========")
@@ -1438,3 +1478,99 @@ class Plugin(indigo.PluginBase):
             f"Bond description update complete: "
             f"{updated} updated, {skipped} skipped, {errors} errors."
         )
+
+    def getRetrySettings(self):
+        try:
+            maxRetries = max(
+                0, int(self.pluginPrefs.get("maxRetries", 3))
+            )
+        except (TypeError, ValueError):
+            maxRetries = 3
+
+        try:
+            retryDelay = max(
+                1, int(self.pluginPrefs.get("retryDelay", 5))
+            )
+        except (TypeError, ValueError):
+            retryDelay = 5
+
+        return maxRetries, retryDelay
+
+    def closedPrefsConfigUi(self, valuesDict, userCancelled):
+
+        if userCancelled:
+            return
+
+        autoBondEnabled = valuesDict.get(
+            "autoBondEnabled",
+            self.pluginPrefs.get("autoBondEnabled", False)
+        )
+
+        folderName = valuesDict.get(
+            "autoBondFolder",
+            self.pluginPrefs.get("autoBondFolder", "Syncrify")
+        )
+
+        if autoBondEnabled:
+            self.logger.info("AutoBond enabled. Checking for missing Bonds...")
+            self.createBonds(folderName)
+
+        # Always rebuild mappings, whether AutoBond is enabled or not.
+        self.mapKeypadButtons()
+
+    def findExistingBond(self, keypadId, button, excludeBondId=None):
+
+        for dev in indigo.devices.iter("self.syncrifyBond"):
+
+            if excludeBondId is not None and dev.id == excludeBondId:
+                continue
+
+            props = dev.pluginProps
+
+            if (int(props.get("keypadId", 0)) == int(keypadId)
+                    and int(props.get("keypadButton", 0)) == int(button)):
+                return dev
+
+        return None
+
+
+    def validateDeviceConfigUi(self, valuesDict, typeId, devId):
+
+        keypadId = valuesDict.get("keypadId")
+        button = valuesDict.get("keypadButton")
+
+        if not keypadId or not button:
+            return True, valuesDict
+
+        keypadId = int(keypadId)
+        button = int(button)
+
+        for dev in indigo.devices.iter("self.syncrifyBond"):
+
+            # Exclude the Bond currently being edited.
+            if devId and dev.id == devId:
+                continue
+
+            props = dev.pluginProps
+
+            existingKeypad = int(props.get("keypadId", 0))
+            existingButton = int(props.get("keypadButton", 0))
+
+            if existingKeypad == keypadId and existingButton == button:
+
+                keypad = indigo.devices.get(keypadId)
+                keypadName = keypad.name if keypad else str(keypadId)
+
+                errorMessage = (
+                    f"{keypadName}, button {button}, "
+                    f"is already assigned to Bond '{dev.name}'. "
+                    f"Each physical keypad button can only have one Bond."
+                )
+
+                self.logger.warning(
+                    f"Bond configuration rejected: {errorMessage}"
+                )
+
+                return False, valuesDict, errorMessage
+
+        return True, valuesDict

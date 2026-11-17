@@ -1,45 +1,74 @@
 # Syncrify
 
-**Bidirectional synchronization for Indigo and Insteon KeypadLinc devices.**
+## Your KeypadLinc buttons. First-class Indigo devices. Synchronized. 
 
-Syncrify connects Insteon KeypadLinc buttons with Indigo devices through logical Bond devices, keeping all three representations synchronized.
+**No triggers needed.**
 
-Rather than treating a keypad button as simply a switch, Syncrify gives each button a logical counterpart in Indigo. Changes originating from the keypad, the Bond, or the bound device are propagated to the other participants.
+![[Syncrify_Banner.png]]
 
-## What it does
 
-Syncrify provides three-way synchronization:
+Syncrify gives you the ability to use your Insteon KeypadLinc accessory buttons just like any other first-class Indigo device — and makes it remarkably simple to put those buttons in control of the devices you choose.
 
-- **Keypad → Bond → Device:** A physical KeypadLinc button changes its corresponding Bond and bound Indigo device.
-- **Bond → Keypad → Device:** A change to the logical Bond is reflected in the physical keypad and bound device.
-- **Device → Bond → Keypad:** Changes originating from the bound device are reflected in the Bond and physical keypad.
+A button can control a light, a plug, a Roomify Room, or just about any other Indigo on/off device. No chains of triggers to build, debug, or maintain.
 
-The objective is simple: regardless of where a change originates, the other participants stay in alignment.
+`[Getting Started](docs/GettingStarted.md)`
+
+## Three participants. One synchronized relationship.
+
+**KeypadLinc Button**
+
+Your physical button becomes a first-class Indigo device. Turn it on or off in Indigo, just like any other device. Put it on a Control Page. See its status at a glance throughout Indigo.
+
+**Bond**
+
+A logical Indigo device that represents the relationship between the physical button and the device it controls. Syncrify uses the Bond to coordinate state across all participants.
+
+**Controlled Device**
+
+A light, plug, Roomify Room, or any other Indigo on/off device you want the button to operate.
+
+## What Syncrify does for you
+
+### 1. First-class buttons
+
+Each configured KeypadLinc accessory button gets its own Indigo device. Use it in Control Pages, actions, triggers, and anywhere else Indigo accepts a device.
+
+### 2. One-step setup
+
+Syncrify can scan your Indigo setup, find your KeypadLinc devices, and create the necessary Bond devices for their configured accessory buttons. Then simply choose the Indigo device you want each button to control. No need to build a collection of ON and OFF triggers.
+
+### 3. Always in sync
+
+Press the physical button and the controlled device responds. Change the controlled device somewhere else in Indigo, and the physical button follows.
+
+The button isn't just a controller. It's a status indicator, too.
+
+**Your buttons. Your devices. Your way. No triggers needed.**
+
+---
 
 ## How it works
 
-Syncrify creates a logical Bond for each configured KeypadLinc button.
+Syncrify creates a logical Bond for each configured KeypadLinc button. Each Bond represents the relationship between one physical button and its associated Indigo device.
 
-Each Bond represents the relationship between a physical keypad button and its associated Indigo device.
-
-This architecture provides a consistent synchronization point while keeping the physical keypad and the bound device loosely coupled.
+Changes can originate from the keypad, the Bond, or the controlled device. Syncrify recognizes the relevant changes and coordinates the necessary updates to keep the participants aligned.
 
 ### Keypad support
 
-Syncrify recognizes the configured button count of each KeypadLinc.
+Syncrify recognizes the configured button count of each KeypadLinc:
 
-- **6-button KeypadLinc:** Buttons B3–B6.
-- **8-button KeypadLinc:** Buttons B2–B8.
+- **6-button KeypadLinc:** Buttons B3–B6.
+    
+- **8-button KeypadLinc:** Buttons B2–B8.
+    
 
-The plugin uses the keypad's configuration to determine which buttons are available for bonding.
+The plugin uses the keypad configuration to determine which accessory buttons are available for bonding.
 
-## Feedback-loop prevention
+### Feedback-loop prevention
 
-Bidirectional synchronization introduces an important challenge: changes propagated from one participant must not trigger an endless cycle of additional changes.
+Bidirectional synchronization requires care: an update sent by Syncrify must not be mistaken for a new, independent request to change state.
 
-Syncrify incorporates intent tracking to distinguish an originating change from changes resulting from synchronization.
-
-This allows changes to propagate in either direction without creating repetitive command loops.
+Syncrify tracks synchronization obligations so that updates from one participant can be recognized as confirmations of an instruction, rather than treated as new intent. This prevents repetitive command loops while allowing changes to originate from any participant.
 
 ## Current development status
 
@@ -48,20 +77,18 @@ Syncrify has been tested with multiple KeypadLinc devices and associated Indigo 
 Current testing includes:
 
 - Nine KeypadLinc devices.
+    
 - 35 logical Bonds.
+    
 - Keypad-to-Bond synchronization.
+    
 - Bond-to-keypad synchronization.
+    
 - Bound-device-to-Bond synchronization.
+    
 - Bidirectional propagation without feedback loops.
-
-## Design philosophy
-
-Syncrify is built around a simple principle:
-
-**The keypad, the logical Bond, and the bound device should behave as three representations of the same intent.**
-
-The synchronization mechanism should be predictable, avoid unnecessary commands, and remain stable regardless of which participant initiates a change.
-
+    
+**New to Syncrify?** Start with [Getting Started](docs/GettingStarted.md).
 ---
 
-*Syncrify is an Indigo Domotics plugin. Development and documentation are ongoing.*
+_Syncrify is an Indigo Domotics plugin. Development and documentation are ongoing._

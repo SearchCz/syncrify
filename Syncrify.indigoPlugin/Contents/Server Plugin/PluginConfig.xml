@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<PluginConfig>
+
+    <!-- ===================================================== -->
+    <!-- GENERAL -->
+    <!-- ===================================================== -->
+
+    <Field id="label_general" type="label" alignWithControl="False">
+        <Label>General</Label>
+    </Field>
+
+
+    <Field id="active" type="checkbox" defaultValue="true">
+        <Label>Syncrify Active</Label>
+    </Field>
+
+    <Field id="debug" type="checkbox" defaultValue="false">
+        <Label>Enable Debug Logging</Label>
+    </Field>
+
+    <Field id="label_general_gap" type="label"
+        alignWithControl="False">
+        <Label></Label>
+    </Field>
+
+    <Field id="sep_general" type="separator"/>
+
+
+    <!-- ===================================================== -->
+    <!-- AUTOBOND -->
+    <!-- ===================================================== -->
+
+    <Field id="label_autobond_explanantion" type="label"
+        alignWithControl="False">
+        <Label></Label>
+    </Field>
+
+    <Field id="label_autobond_explanantion1" type="label"
+        alignWithControl="False">
+        <Label>AUTOMATIC BOND CREATION Allows the plugin to create one Syncrify Bond oer button.</Label>
+    </Field>
+
+    <Field id="label_autobond_explanantion2" type="label"
+        alignWithControl="False">
+        <Label>(You select the device to be controlled later via Indigo device configuration)   </Label>
+    </Field>
+
+    <Field id="label_autobond_explanantion3" type="label"
+        alignWithControl="False">
+        <Label></Label>
+    </Field>
+
+    <Field id="autoBondEnabled" type="checkbox" defaultValue="false">
+        <Label>Enable Automatic Bond Creation</Label>
+    </Field>
+
+    <Field id="autoBondFolder" type="textfield"
+        defaultValue="Syncrify"
+        visibleBindingId="autoBondEnabled"
+        visibleBindingValue="true">
+        <Label>Destination Folder for Bond Devices:</Label>
+    </Field>
+
+    <Field id="label_autobond_warning1" type="label"
+        alignWithControl="False"
+        visibleBindingId="autoBondEnabled"
+        visibleBindingValue="true">
+        <Label></Label>
+    </Field>
+
+    <Field id="label_autobond_warning2" type="label"
+        alignWithControl="False"
+        visibleBindingId="autoBondEnabled"
+        visibleBindingValue="true">
+        <Label>IMPORTANT: Bond names are derived from your KeypadLinc device names. Make sure you are happy with those names before enabling AutoBond.</Label>
+    </Field>
+
+    <Field id="label_autobond_warning3" type="label"
+        alignWithControl="False">
+        <Label></Label>
+    </Field>
+
+    <Field id="sep_autobond" type="separator"/>
+
+
+    <!-- ===================================================== -->
+    <!-- RESYNC -->
+    <!-- ===================================================== -->
+
+    <Field id="label_resync0" type="label" alignWithContro="False">
+        <Label></Label>
+    </Field>
+
+    <Field id="label_resync1" type="label" alignWithControl="False">
+        <Label>RESYNC keeps tabs on whether bound devices and keypad buttons reach their intended state, and re-issues instructions for those that appear to be out of sync.</Label>
+    </Field>
+
+    <Field id="label_resync2" type="label" alignWithContro="False">
+        <Label></Label>
+    </Field>
+
+    <Field id="reSyncEnabled" type="checkbox" defaultValue="true">
+        <Label>Enable ReSync (Automatic Retries)</Label>
+    </Field>
+
+
+    <Field id="maxRetries" type="menu"
+        defaultValue="3"
+        visibleBindingId="reSyncEnabled"
+        visibleBindingValue="true">
+        <Label>Maximum Retries After Initial Attempt:</Label>
+        <List>
+            <Option value="0">None</Option>
+            <Option value="1">1</Option>
+            <Option value="2">2</Option>
+            <Option value="3">3</Option>
+            <Option value="4">4</Option>
+            <Option value="5">5</Option>
+        </List>
+    </Field>
+
+    <Field id="retryDelay" type="menu"
+        defaultValue="15"
+        visibleBindingId="reSyncEnabled"
+        visibleBindingValue="true">
+        <Label>Delay Between Attempts:</Label>
+        <List>
+            <Option value="5">5 seconds</Option>
+            <Option value="10">10 seconds</Option>
+            <Option value="15">15 seconds</Option>
+            <Option value="20">20 seconds</Option>
+            <Option value="30">30 seconds</Option>
+            <Option value="45">45 seconds</Option>
+            <Option value="60">60 seconds</Option>
+        </List>
+    </Field>
+
+    <Field id="label_general_gap2" type="label"
+        alignWithControl="False">
+        <Label></Label>
+    </Field>
+    <Field id="label_general_gap3" type="label"
+        alignWithControl="False">
+        <Label></Label>
+    </Field>
+    <Field id="label_general_gap4" type="label"
+        alignWithControl="False">
+        <Label></Label>
+    </Field>
+    <Field id="label_general_gap5" type="label"
+        alignWithControl="False">
+        <Label></Label>
+    </Field>
+    <Field id="label_general_gap6" type="label"
+        alignWithControl="False">
+        <Label></Label>
+    </Field>
+    <Field id="label_general_gap7" type="label"
+        alignWithControl="False">
+        <Label></Label>
+    </Field>
+
+
+</PluginConfig>
