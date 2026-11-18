@@ -226,6 +226,11 @@ class Plugin(indigo.PluginBase):
                     self.logger.info(f"sent \"{dev.name}\" toggle")
 
                 # And then tell the Indigo Server to update the state:
+                if new_on_state:
+                    self.register(dev, "bond", f"{dev.name} [{dev.id}]", True)
+                else:
+                    self.register(dev, "bond", f"{dev.name} [{dev.id}]", False)
+
                 dev.updateStateOnServer("onOffState", new_on_state)
             else:
                 # Else log failure but do NOT update state on Indigo Server.
