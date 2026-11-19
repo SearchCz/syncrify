@@ -727,6 +727,13 @@ class Plugin(indigo.PluginBase):
         self.spawn(newDev, initiator, state)
 
     def insteonCommandReceived(self, cmd):
+        if cmd.cmdScene is None:
+            if self.isDebugActivesDebugActive():
+                self.logger.debug(
+                    f"Ignoring Insteon command with no scene: address={cmd.address}"
+                )
+            return
+
         key = (cmd.address.upper(), int(cmd.cmdScene))
 
         bondId = self.bondByKeypadButton.get(key)
